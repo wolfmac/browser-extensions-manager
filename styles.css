@@ -1,6 +1,5 @@
 :root {
-    --light-gradient: linear-gradient(180deg, #EBF2FC 0%, #EEF8F9 100%);
-    --dark-gradient: linear-gradient(180deg, #040918 0%, #091540 100%);
+    --bg: linear-gradient(180deg, #EBF2FC 0%, #EEF8F9 100%);
     --neutral-900: hsl(227, 75%, 14%);
     --neutral-800: hsl(226, 25%, 17%);
     --neutral-700: hsl(225, 23%, 24%);
@@ -12,7 +11,47 @@
     --red-400: hsl(3, 86%, 64%);
     --red-500: hsl(3, 71%, 56%);
     --red-700: hsl(3, 77%, 44%);
+
+    --card-bg: var(--neutral-0);
+    --header-bg: var(--neutral-0);
+    --filter-bg: var(--neutral-0);
+    --filter-active-bg: var(--red-500);
+    --filter-active-text: var(--neutral-0);
+    --filter-active-bg-hover: var(--red-700);
+    --theme-toggle-bg: var(--neutral-100);
+    --hover-bg: var(--neutral-300);
+    --text-primary: var(--neutral-900);
+    --text-secondary: var(--neutral-600);
+    --border: var(--neutral-200);
+  
+    --toggle-on: var(--red-500);
+    --toggle-off: var(--neutral-300);
+  
+    --badge-active: var(--red-500);
+    --badge-inactive: var(--neutral-200);
 }
+
+body.dark {
+    --bg: linear-gradient(180deg, #040918 0%, #091540 100%);
+    --card-bg: var(--neutral-800);
+    --header-bg: var(--neutral-800);
+    --filter-bg: var(--neutral-700);
+    --filter-active-bg: var(--red-400);
+    --filter-active-bg-hover: var(--red-500);
+    --filter-active-text: var(--neutral-900);
+    --theme-toggle-bg: var(--neutral-700);
+    --hover-bg: var(--neutral-600);
+    --text-primary: var(--neutral-0);
+    --text-secondary: var(--neutral-300);
+    --border: var(--neutral-700);
+  
+    --toggle-on: var(--red-400);
+    --toggle-off: var(--neutral-600);
+  
+    --badge-active: var(--red-400);
+    --badge-inactive: var(--neutral-700);
+}
+
 
 @font-face {
     font-family: 'Noto Sans';
@@ -24,19 +63,26 @@ html {
 body {
     font-size: 16px;
     font-family: 'Noto Sans', sans-serif;
-    background-image: var(--light-gradient);
-    background-repeat: no-repeat;
+    background-image: var(--bg);
+    background-size: cover;
     height: 100%;
-    color: var(--neutral-900);
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--text-primary);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 }
 
-body.dark-theme {
-    background-color: var(--dark-gradient);
-    color: var(--neutral-0);
+h3 {
+    font-weight: bold;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+    color: var(--text-secondary);
 }
 
 .container {
@@ -44,20 +90,22 @@ body.dark-theme {
     margin: 0 auto;
 }
 
-/* header {
-    width: 85%;
-} */
 
 #header-bar {
-    background-color: var(--neutral-0);
-    border-radius: 20px;
-    height: 60px;
+    background-color: var(--header-bg);
+    border-radius: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 25px;
+    padding: 10px 10px;
     margin-top: 15px;
     margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#site-logo {
+    display: flex;
+    align-items: center;
 }
 
 #list-filters {
@@ -68,29 +116,155 @@ body.dark-theme {
 }
 
 button {
-    background-color: var(--neutral-0);
-    border: none;
+    background-color: var(--filter-bg);
+    border: 1px solid  var(--border);
     border-radius: 25px;
     font-family: 'Noto Sans', sans-serif;
-    color: var(--neutral-900);
+    color: var(--text-primary);
     font-size: 16px;
     padding: 8px 20px;
     cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: var(--hover-bg);
 }
 
 button.selected {
-    background-color: var(--red-700);
-    color: var(--neutral-0);
+    background-color: var(--filter-active-bg);
+    color: var(--filter-active-text);
+    font-weight: 400;
+}
+
+button.selected:hover {
+    background-color: var(--filter-active-bg-hover);
+}
+
+#extension-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .extension-card {
-    background-color: var(--neutral-0);
-    border: var(--neutral-0), solid;
-    border-radius: 25px;
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1 1 calc(33.333% - 20px); /* 3 per row, minus gap */
+    box-sizing: border-box;
+    margin: 5px;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 40px;
+}
+
+.card-logo {
+    margin-right: 10px;
+}
+
+.card-title {
+    margin-bottom: 10px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-delete-button {
+    background-color: var(--filter-bg);
 }
 
 .extension-list {
     display: flex;
     align-items: start;
     justify-content: space-evenly;
+}
+
+#theme-toggle {
+    background-color: var(--theme-toggle-bg);
+    border-radius: 10px;
+    height: 45px;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#theme-toggle:hover {
+    background-color: var(--hover-bg);
+    cursor: pointer;
+}
+
+
+
+
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px; /* Adjusted width */
+    height: 24px; /* Adjusted height */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-off);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px; /* Adjusted size for the slider knob */
+    width: 18px; /* Adjusted size for the slider knob */
+    left: 3px; /* Adjusted position */
+    bottom: 3px; /* Adjusted position */
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--toggle-on);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--toggle-on);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px); /* Adjusted for smaller size */
+    -ms-transform: translateX(16px); /* Adjusted for smaller size */
+    transform: translateX(16px); /* Adjusted for smaller size */
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
