@@ -20,6 +20,19 @@ activeFilters.addEventListener("click", function(e) {
         filterButton.forEach(btn => btn.classList.remove("selected"));
         e.target.classList.add("selected");
         console.log(selectedFilter);
+        handleFilter(selectedFilter);
+    }
+});
+
+extensionList.addEventListener("click", function(e) {
+    if (e.target && e.target.matches('.card-delete-button')) {
+        const selectedCard = e.target.closest('.extension-card');
+        const extName = selectedCard.querySelector('.card-title').textContent;
+        const indexToDelete = extensionsData.findIndex((ext) => ext.name === extName);
+        let newExtensionsData = extensionsData.filter((ext, index) => index !== indexToDelete);
+        extensionsData = newExtensionsData;
+        localStorage.setItem('extensionsData', JSON.stringify(newExtensionsData));
+        renderExtensions(extensionsData);
     }
 });
 
@@ -28,14 +41,14 @@ function loadData() {
 
     if (localData) {
         extensionsData = JSON.parse(localData);
-        renderExtensions();
+        renderExtensions(extensionsData);
     } else {
         fetch('./data.json')
     .then((res) => res.json())
     .then((data) => {
         extensionsData = data;
         localStorage.setItem('extensionsData', JSON.stringify(data));
-        renderExtensions(); 
+        renderExtensions(extensionsData); 
     });
     }
 }
@@ -44,6 +57,20 @@ function refreshData() {
     if (localStorage.getItem('extensionsData')) {
         extensionsData = localStorage.getItem('extensionsData');
     }
+}
+
+function handleFilter(activeFilter) {
+    let filteredExtensions;
+
+    if (activeFilter === "all-filter") {
+        filteredExtensions = extensionsData;
+    } else if (activeFilter === "active-filter") {
+        filteredExtensions = extensionsData.filter((ext) => ext.isActive === true);  
+    } else {
+        filteredExtensions = extensionsData.filter((ext) => ext.isActive === false);
+    }
+
+    renderExtensions(filteredExtensions);
 }
 
 function toggleTheme () {
@@ -65,8 +92,8 @@ function resetTheme () {
     body.classList.remove("dark");
 }
 
-function renderExtensions () {
-    const html = extensionsData.map(item => {
+function renderExtensions (renderData) {
+    const html = renderData.map(item => {
         return `
         <div class="extension-card">
         <div class="card-header">

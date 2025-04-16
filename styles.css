@@ -142,25 +142,26 @@ button.selected:hover {
 }
 
 #extension-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
 
-.extension-card {
+  .extension-card {
     background-color: var(--card-bg);
     border-radius: 20px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    flex: 1 1 calc(33.333% - 20px); /* 3 per row, minus gap */
     box-sizing: border-box;
-    margin: 5px;
-}
+  }
 
 .card-header {
     display: flex;
     flex-direction: row;
-    margin-bottom: 40px;
+    padding-bottom: 40px;
 }
 
 .card-logo {
