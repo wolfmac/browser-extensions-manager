@@ -29,7 +29,7 @@ The goal of this project is to build a browser extension manager UI that allows 
 
 ### Links
 
-- Solution URL: [Add your solution URL here](https://your-solution-url.com)
+- Solution URL: [Add your solution URL here](https://www.frontendmentor.io/solutions/interactive-browser-extension-manager-htmlcssjs-9B5D-OdmJf)
 
 ## My process
 
