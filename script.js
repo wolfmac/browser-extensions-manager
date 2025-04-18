@@ -4,6 +4,8 @@ const extensionList = document.querySelector('#extension-list');
 const headerBar = document.querySelector('#header-bar');
 const themeToggle = document.querySelector('#theme-toggle');
 const siteLogo = document.querySelector('#site-logo');
+const resetDataBtn = document.querySelector('#reset-data');
+const isActiveToggle = document.querySelector('#is-active-toggle');
 const body = document.querySelector('body');
 
 let theme = "light";
@@ -13,6 +15,7 @@ let extensionsData = [];
 loadData();
 
 themeToggle.addEventListener("click", toggleTheme);
+resetDataBtn.addEventListener("click", resetData);
 
 activeFilters.addEventListener("click", function(e) {
     if (e.target && e.target.matches('button')) {
@@ -33,6 +36,14 @@ extensionList.addEventListener("click", function(e) {
         extensionsData = newExtensionsData;
         localStorage.setItem('extensionsData', JSON.stringify(newExtensionsData));
         renderExtensions(extensionsData);
+    } else if (e.target && e.target.matches('.is-active-toggle')) {
+        const selectedCard = e.target.closest('.extension-card');
+        const extName = selectedCard.querySelector('.card-title').textContent;
+        const indexToToggle = extensionsData.findIndex((ext) => ext.name === extName);
+        extensionsData[indexToToggle].isActive = !extensionsData[indexToToggle].isActive;
+        localStorage.setItem('extensionsData', JSON.stringify(extensionsData));
+        renderExtensions(extensionsData);
+        handleFilter(selectedFilter);
     }
 });
 
@@ -65,11 +76,12 @@ function handleFilter(activeFilter) {
     if (activeFilter === "all-filter") {
         filteredExtensions = extensionsData;
     } else if (activeFilter === "active-filter") {
-        filteredExtensions = extensionsData.filter((ext) => ext.isActive === true);  
+        filteredExtensions = extensionsData.filter((ext) => ext.isActive === true); 
     } else {
         filteredExtensions = extensionsData.filter((ext) => ext.isActive === false);
-    }
 
+    }
+    selectedFilter = activeFilter;
     renderExtensions(filteredExtensions);
 }
 
@@ -108,7 +120,7 @@ function renderExtensions (renderData) {
         <div class="card-footer">
         <button type="button" class="card-delete-button">Remove</button>
         <label class="switch">
-        <input type="checkbox" ${item.isActive ? "checked" : ""}>
+        <input class="is-active-toggle" type="checkbox" ${item.isActive ? "checked" : ""}>
         <span class="slider round"></span>
         </label>
         </div>
@@ -118,3 +130,24 @@ function renderExtensions (renderData) {
 
     extensionList.innerHTML = html;
 }
+
+function resetData () {
+    const localStorageData = localStorage.getItem('extensionsData');
+
+    if(localStorageData) {
+        localStorage.setItem('extensionsData', '');
+        fetch('./data.json')
+    .then((res) => res.json())
+    .then((data) => {
+        extensionsData = data;
+        localStorage.setItem('extensionsData', JSON.stringify(data));
+    });
+    selectedFilter = "all-filter";
+    renderExtensions(extensionsData);
+    handleFilter(selectedFilter);
+    }
+}
+
+// function handleStatusChange (ext) {
+
+// }
