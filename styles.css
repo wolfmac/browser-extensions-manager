@@ -73,6 +73,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h3 {
@@ -156,6 +157,10 @@ button.selected:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding: 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
   }
 
 .card-header {

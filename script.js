@@ -12,8 +12,10 @@ let theme = "light";
 let selectedFilter = "all-filter";
 let extensionsData = [];
 
+// Initial data load
 loadData();
 
+// Event listeners for buttons and toggles
 themeToggle.addEventListener("click", toggleTheme);
 resetDataBtn.addEventListener("click", resetData);
 
@@ -35,18 +37,20 @@ extensionList.addEventListener("click", function(e) {
         let newExtensionsData = extensionsData.filter((ext, index) => index !== indexToDelete);
         extensionsData = newExtensionsData;
         localStorage.setItem('extensionsData', JSON.stringify(newExtensionsData));
-        renderExtensions(extensionsData);
+        handleFilter(selectedFilter);
     } else if (e.target && e.target.matches('.is-active-toggle')) {
         const selectedCard = e.target.closest('.extension-card');
         const extName = selectedCard.querySelector('.card-title').textContent;
         const indexToToggle = extensionsData.findIndex((ext) => ext.name === extName);
         extensionsData[indexToToggle].isActive = !extensionsData[indexToToggle].isActive;
         localStorage.setItem('extensionsData', JSON.stringify(extensionsData));
-        renderExtensions(extensionsData);
         handleFilter(selectedFilter);
     }
 });
 
+// ===== Functions =====
+
+// Load data from local storage or fetch from file if not present in local storage
 function loadData() {
     const localData = localStorage.getItem('extensionsData');
 
@@ -64,12 +68,7 @@ function loadData() {
     }
 }
 
-function refreshData() {
-    if (localStorage.getItem('extensionsData')) {
-        extensionsData = localStorage.getItem('extensionsData');
-    }
-}
-
+// Handle filter toggles
 function handleFilter(activeFilter) {
     let filteredExtensions;
 
@@ -85,6 +84,7 @@ function handleFilter(activeFilter) {
     renderExtensions(filteredExtensions);
 }
 
+// Handle theme change
 function toggleTheme () {
     if (body.classList.contains("dark")) {
         resetTheme();
@@ -99,11 +99,13 @@ function toggleTheme () {
     }   
 }
 
+// Reset back to light theme
 function resetTheme () {
     theme = "light";
     body.classList.remove("dark");
 }
 
+// Render extensions cards from extensionsData array
 function renderExtensions (renderData) {
     const html = renderData.map(item => {
         return `
@@ -113,7 +115,7 @@ function renderExtensions (renderData) {
         <img src="${item.logo}" alt="${item.name} logo">
         </div>
         <div class="card-text">
-        <h3 class="card-title">${item.name}</h2>
+        <h3 class="card-title">${item.name}</h3>
         <p class="card-desc">${item.description}</p>
         </div>
         </div>
@@ -131,23 +133,21 @@ function renderExtensions (renderData) {
     extensionList.innerHTML = html;
 }
 
+// Reset data for ease of testing and fetch sample data from file
 function resetData () {
     const localStorageData = localStorage.getItem('extensionsData');
 
     if(localStorageData) {
-        localStorage.setItem('extensionsData', '');
+        localStorage.removeItem('extensionsData');
         fetch('./data.json')
     .then((res) => res.json())
     .then((data) => {
         extensionsData = data;
         localStorage.setItem('extensionsData', JSON.stringify(data));
+        selectedFilter = "all-filter";
+        renderExtensions(extensionsData);
+        handleFilter(selectedFilter);
     });
-    selectedFilter = "all-filter";
-    renderExtensions(extensionsData);
-    handleFilter(selectedFilter);
+
     }
 }
-
-// function handleStatusChange (ext) {
-
-// }
